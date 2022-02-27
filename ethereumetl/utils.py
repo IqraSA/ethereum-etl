@@ -116,7 +116,7 @@ def dynamic_batch_iterator(iterable, batch_size_getter):
             yield batch
             batch = []
             batch_size = batch_size_getter()
-    if len(batch) > 0:
+    if batch:
         yield batch
 
 

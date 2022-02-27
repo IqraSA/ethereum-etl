@@ -68,7 +68,10 @@ class ExportOriginJob(BaseJob):
 
         # Determine the version and address of the marketplace contract to query based on the block range.
         batches = []
-        if to_block < ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH or from_block >= ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH:
+        if (
+            to_block < ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH
+            or from_block >= ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH
+        ):
             # The block range falls within a single version of the marketplace contract.
             version = '000' if to_block < ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH else '001'
             address = ORIGIN_MARKETPLACE_V0_CONTRACT_ADDRESS if version == '000' else ORIGIN_MARKETPLACE_V1_CONTRACT_ADDRESS
@@ -79,20 +82,17 @@ class ExportOriginJob(BaseJob):
                 'to_block': to_block
             })
         else:
-            # The block range spans across 2 versions of the marketplace contract.
-            batches.append({
+            batches.extend(({
                 'contract_address': ORIGIN_MARKETPLACE_V0_CONTRACT_ADDRESS,
                 'contract_version': '000',
                 'from_block': from_block,
                 'to_block': ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH - 1
-            })
-            batches.append({
+            }, {
                 'contract_address': ORIGIN_MARKETPLACE_V1_CONTRACT_ADDRESS,
                 'contract_version': '001',
                 'from_block': ORIGIN_MARKETPLACE_V1_BLOCK_NUMBER_EPOCH,
                 'to_block': to_block
-            })
-
+            }))
         for batch in batches:
             # https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getfilterlogs
             filter_params = {

@@ -63,7 +63,7 @@ def stream(last_synced_block_file, lag, provider_uri, output, start_block, entit
 
     # TODO: Implement fallback mechanism for provider uris instead of picking randomly
     provider_uri = pick_random_provider_uri(provider_uri)
-    logging.info('Using ' + provider_uri)
+    logging.info(f'Using {provider_uri}')
 
     streamer_adapter = EthStreamerAdapter(
         batch_web3_provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri, batch=True)),

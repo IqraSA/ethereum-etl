@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 #   "0x017dfd85d4f6cb4dcd715a88101f7b1f06cd1e009b2327a0809d01eb9c91f231"
 #   --> "QmNSUYVKDSvPUnRLKmuxk9diJ6yS96r1TrAXzjTiBcCLAL"
 def hex_to_ipfs_hash(param):
-    data = bytearray.fromhex('1220' + param[2:])
+    data = bytearray.fromhex(f'1220{param[2:]}')
     return base58.b58encode(data).decode()
 
 

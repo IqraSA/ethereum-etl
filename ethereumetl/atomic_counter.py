@@ -32,4 +32,4 @@ class AtomicCounter:
 
     def increment(self, increment=1):
         assert increment > 0
-        return [next(self._counter) for _ in range(0, increment)][-1]
+        return [next(self._counter) for _ in range(increment)][-1]

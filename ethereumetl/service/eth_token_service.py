@@ -97,12 +97,11 @@ class EthTokenService(object):
         try:
             b = b.decode('utf-8')
         except UnicodeDecodeError as e:
-            if ignore_errors:
-                logger.debug('A UnicodeDecodeError exception occurred while trying to decode bytes to string', exc_info=True)
-                b = None
-            else:
+            if not ignore_errors:
                 raise e
 
+            logger.debug('A UnicodeDecodeError exception occurred while trying to decode bytes to string', exc_info=True)
+            b = None
         if self._function_call_result_transformer is not None:
             b = self._function_call_result_transformer(b)
         return b
@@ -110,12 +109,10 @@ class EthTokenService(object):
 
 def call_contract_function(func, ignore_errors, default_value=None):
     try:
-        result = func.call()
-        return result
+        return func.call()
     except Exception as ex:
-        if type(ex) in ignore_errors:
-            logger.debug('An exception occurred in function {} of contract {}. '.format(func.fn_name, func.address)
-                             + 'This exception can be safely ignored.', exc_info=True)
-            return default_value
-        else:
+        if type(ex) not in ignore_errors:
             raise ex
+        logger.debug('An exception occurred in function {} of contract {}. '.format(func.fn_name, func.address)
+                         + 'This exception can be safely ignored.', exc_info=True)
+        return default_value

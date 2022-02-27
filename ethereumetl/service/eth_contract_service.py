@@ -28,17 +28,16 @@ class EthContractService:
 
     def get_function_sighashes(self, bytecode):
         bytecode = clean_bytecode(bytecode)
-        if bytecode is not None:
-            evm_code = EvmCode(contract=Contract(bytecode=bytecode), static_analysis=False, dynamic_analysis=False)
-            evm_code.disassemble(bytecode)
-            basic_blocks = evm_code.basicblocks
-            if basic_blocks and len(basic_blocks) > 0:
-                init_block = basic_blocks[0]
-                instructions = init_block.instructions
-                push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
-                return sorted(list(set('0x' + inst.operand for inst in push4_instructions)))
-            else:
-                return []
+        if bytecode is None:
+            return []
+        evm_code = EvmCode(contract=Contract(bytecode=bytecode), static_analysis=False, dynamic_analysis=False)
+        evm_code.disassemble(bytecode)
+        basic_blocks = evm_code.basicblocks
+        if basic_blocks and len(basic_blocks) > 0:
+            init_block = basic_blocks[0]
+            instructions = init_block.instructions
+            push4_instructions = [inst for inst in instructions if inst.name == 'PUSH4']
+            return sorted(list({f'0x{inst.operand}' for inst in push4_instructions}))
         else:
             return []
 
@@ -80,7 +79,7 @@ def clean_bytecode(bytecode):
 
 
 def get_function_sighash(signature):
-    return '0x' + function_signature_to_4byte_selector(signature).hex()
+    return f'0x{function_signature_to_4byte_selector(signature).hex()}'
 
 
 class ContractWrapper:

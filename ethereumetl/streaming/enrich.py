@@ -112,7 +112,7 @@ def enrich_logs(blocks, logs):
         ]))
 
     if len(result) != len(logs):
-        raise ValueError('The number of logs is wrong ' + str(result))
+        raise ValueError(f'The number of logs is wrong {result}')
 
     return result
 
@@ -171,7 +171,7 @@ def enrich_traces(blocks, traces):
         ]))
 
     if len(result) != len(traces):
-        raise ValueError('The number of traces is wrong ' + str(result))
+        raise ValueError(f'The number of traces is wrong {result}')
 
     return result
 
@@ -194,7 +194,7 @@ def enrich_contracts(blocks, contracts):
         ]))
 
     if len(result) != len(contracts):
-        raise ValueError('The number of contracts is wrong ' + str(result))
+        raise ValueError(f'The number of contracts is wrong {result}')
 
     return result
 
@@ -217,6 +217,6 @@ def enrich_tokens(blocks, tokens):
         ]))
 
     if len(result) != len(tokens):
-        raise ValueError('The number of tokens is wrong ' + str(result))
+        raise ValueError(f'The number of tokens is wrong {result}')
 
     return result

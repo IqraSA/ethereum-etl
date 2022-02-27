@@ -27,15 +27,18 @@ def create_item_exporter(output):
     item_exporter_type = determine_item_exporter_type(output)
     if item_exporter_type == ItemExporterType.PUBSUB:
         from blockchainetl.jobs.exporters.google_pubsub_item_exporter import GooglePubSubItemExporter
-        item_exporter = GooglePubSubItemExporter(item_type_to_topic_mapping={
-            'block': output + '.blocks',
-            'transaction': output + '.transactions',
-            'log': output + '.logs',
-            'token_transfer': output + '.token_transfers',
-            'trace': output + '.traces',
-            'contract': output + '.contracts',
-            'token': output + '.tokens',
-        })
+        item_exporter = GooglePubSubItemExporter(
+            item_type_to_topic_mapping={
+                'block': f'{output}.blocks',
+                'transaction': f'{output}.transactions',
+                'log': f'{output}.logs',
+                'token_transfer': f'{output}.token_transfers',
+                'trace': f'{output}.traces',
+                'contract': f'{output}.contracts',
+                'token': f'{output}.tokens',
+            }
+        )
+
     elif item_exporter_type == ItemExporterType.POSTGRES:
         from blockchainetl.jobs.exporters.postgres_item_exporter import PostgresItemExporter
         from blockchainetl.streaming.postgres_utils import create_insert_statement_for_table

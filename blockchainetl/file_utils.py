@@ -45,18 +45,15 @@ def get_file_handle(filename, mode='w', binary=False, create_parent_dirs=True):
     full_mode = mode + ('b' if binary else '')
     is_file = filename and filename != '-'
     if is_file:
-        fh = open(filename, full_mode)
+        return open(filename, full_mode)
     elif filename == '-':
         fd = sys.stdout.fileno() if mode == 'w' else sys.stdin.fileno()
-        fh = os.fdopen(fd, full_mode)
+        return os.fdopen(fd, full_mode)
     else:
-        fh = NoopFile()
-    return fh
+        return NoopFile()
 
 
 def close_silently(file_handle):
-    if file_handle is None:
-        pass
     try:
         file_handle.close()
     except OSError:

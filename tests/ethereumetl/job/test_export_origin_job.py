@@ -26,7 +26,7 @@ def read_resource(resource_group, file_name):
 ])
 def test_export_origin(tmpdir, start_block, end_block, batch_size, output_format, resource_group, web3_provider_type, ipfs_client_type):
     marketplace_output_file = str(tmpdir.join('actual_marketplace.' + output_format))
-    shop_output_file = str(tmpdir.join('actual_shop.' + output_format))
+    shop_output_file = str(tmpdir.join(f'actual_shop.{output_format}'))
 
     ipfs_client = MockIpfsClient(lambda file: read_resource(resource_group, file)) if ipfs_client_type == 'mock' else get_origin_ipfs_client()
 
@@ -49,5 +49,6 @@ def test_export_origin(tmpdir, start_block, end_block, batch_size, output_format
     )
 
     compare_lines_ignore_order(
-        read_resource(resource_group, 'expected_shop.' + output_format), read_file(shop_output_file)
+        read_resource(resource_group, f'expected_shop.{output_format}'),
+        read_file(shop_output_file),
     )

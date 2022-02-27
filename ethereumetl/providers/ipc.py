@@ -59,9 +59,13 @@ class BatchIPCProvider(IPCProvider):
                     except socket.timeout:
                         timeout.sleep(0)
                         continue
-                    if raw_response == b"":
+                    if (
+                        raw_response == b""
+                        or raw_response != b""
+                        and not has_valid_json_rpc_ending(raw_response)
+                    ):
                         timeout.sleep(0)
-                    elif has_valid_json_rpc_ending(raw_response):
+                    else:
                         try:
                             response = json.loads(raw_response.decode('utf-8'))
                         except JSONDecodeError:
@@ -69,15 +73,11 @@ class BatchIPCProvider(IPCProvider):
                             continue
                         else:
                             return response
-                    else:
-                        timeout.sleep(0)
-                        continue
 
 
 # A valid JSON RPC response can only end in } or ] http://www.jsonrpc.org/specification
 def has_valid_json_rpc_ending(raw_response):
-    for valid_ending in [b"}\n", b"]\n"]:
-        if raw_response.endswith(valid_ending):
-            return True
-    else:
-        return False
+    return any(
+        raw_response.endswith(valid_ending)
+        for valid_ending in [b"}\n", b"]\n"]
+    )

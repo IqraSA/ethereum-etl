@@ -62,5 +62,6 @@ def test_export_contracts_job(tmpdir, batch_size, contract_addresses, output_for
     print('=====================')
     print(read_file(contracts_output_file))
     compare_lines_ignore_order(
-        read_resource(resource_group, 'expected_contracts.' + output_format), read_file(contracts_output_file)
+        read_resource(resource_group, f'expected_contracts.{output_format}'),
+        read_file(contracts_output_file),
     )
